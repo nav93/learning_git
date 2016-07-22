@@ -1,0 +1,16 @@
+# wordcloud generation 
+consumer_key ="CK7otclzv08eiAw5YYc4z4cuF"
+consumer_secret ="5TixbHy70NDk4jXEkwhoTpUZG3oRu97fTwzgz7UEa0mCYZB0h4"
+access_token ="1162316348-EXvoeTjZDssxHhG1uXsChJINyOP8napKeSFk4Kr"
+access_secret ="txFcpNsj9hAxb3VXgK1Tb6UMFOCSHOYy4c4zgG3b8OJ5W"
+download.file(url="http://curl.haxx.se/ca/cacert.pem", destfile="cacert.pem")
+setup_twitter_oauth(consumer_key,consumer_secret,access_token,access_secret)
+rsta <- searchTwitter("#kabaali", n=500)
+r_stats_text <- sapply(rsta, function(x) x$getText())
+gsub("[[:punct:]]", "", r_stats_text) #removing special characters
+r_stats_text_corpus <- Corpus(VectorSource(r_stats_text))#creating corpus
+#cleanup
+r_stats_text_corpus <- tm_map(r_stats_text_corpus, content_transformer(tolower))
+r_stats_text_corpus <- tm_map(r_stats_text_corpus, removePunctuation)
+r_stats_text_corpus <- tm_map(r_stats_text_corpus, function(x)removeWords(x,stopwords()))
+wordcloud(r_stats_text_corpus)
